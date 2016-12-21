@@ -7,7 +7,8 @@ module.exports = {
     resolve: {
         root: __dirname + "/src",
         alias: {
-            Clock: "components/Clock.jsx"
+            Clock: "components/Clock.jsx",
+            CountdownForm: "components/CountdownForm.jsx"
         },
         extensions: ["", ".js", ".jsx"]
     },
