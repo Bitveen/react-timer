@@ -26740,7 +26740,8 @@
 	        var _this = _possibleConstructorReturn(this, (Countdown.__proto__ || Object.getPrototypeOf(Countdown)).call(this, props));
 
 	        _this.state = {
-	            totalSeconds: 0
+	            totalSeconds: 0,
+	            countdownStatus: "stopped"
 	        };
 
 	        _this.setSeconds = _this.setSeconds.bind(_this);
@@ -26751,16 +26752,42 @@
 	        key: "setSeconds",
 	        value: function setSeconds(seconds) {
 	            this.setState({
-	                totalSeconds: seconds
+	                totalSeconds: seconds,
+	                countdownStatus: "started"
 	            });
+	        }
+	    }, {
+	        key: "startTimer",
+	        value: function startTimer() {
+	            var _this2 = this;
+
+	            this.timerID = setInterval(function () {
+	                var newSeconds = _this2.state.totalSeconds - 1;
+	                _this2.setState({
+	                    totalSeconds: newSeconds >= 0 ? newSeconds : 0
+	                });
+	            }, 1000);
+	        }
+	    }, {
+	        key: "componentDidUpdate",
+	        value: function componentDidUpdate(prevProps, prevState) {
+	            if (this.state.countdownStatus !== prevState.countdownStatus) {
+	                switch (this.state.countdownStatus) {
+	                    case "started":
+	                        this.startTimer();
+	                        break;
+	                }
+	            }
 	        }
 	    }, {
 	        key: "render",
 	        value: function render() {
+	            var totalSeconds = this.state.totalSeconds;
+
 	            return _react2.default.createElement(
 	                "div",
 	                null,
-	                _react2.default.createElement(_Clock2.default, { totalSeconds: this.state.totalSeconds }),
+	                _react2.default.createElement(_Clock2.default, { totalSeconds: totalSeconds }),
 	                _react2.default.createElement(_CountdownForm2.default, { onSetSeconds: this.setSeconds })
 	            );
 	        }

@@ -8,7 +8,8 @@ module.exports = {
         root: __dirname + "/src",
         alias: {
             Clock: "components/Clock.jsx",
-            CountdownForm: "components/CountdownForm.jsx"
+            CountdownForm: "components/CountdownForm.jsx",
+            Countdown: "components/Countdown.jsx"
         },
         extensions: ["", ".js", ".jsx"]
     },

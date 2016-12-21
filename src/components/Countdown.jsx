@@ -7,7 +7,8 @@ export default class Countdown extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            totalSeconds: 0
+            totalSeconds: 0,
+            countdownStatus: "stopped"
         };
 
         this.setSeconds = this.setSeconds.bind(this);
@@ -15,15 +16,34 @@ export default class Countdown extends React.Component {
 
     setSeconds(seconds) {
         this.setState({
-            totalSeconds: seconds
+            totalSeconds: seconds,
+            countdownStatus: "started"
         });
     }
+    startTimer() {
+        this.timerID = setInterval(() => {
+            let newSeconds = this.state.totalSeconds - 1;
+            this.setState({
+                totalSeconds: newSeconds >= 0 ? newSeconds : 0
+            });
+        }, 1000);
+    }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (this.state.countdownStatus !== prevState.countdownStatus) {
+            switch (this.state.countdownStatus) {
+                case "started":
+                    this.startTimer();
+                    break;
+            }
+        }
+    }
 
     render() {
+        let {totalSeconds} = this.state;
         return (
             <div>
-                <Clock totalSeconds={this.state.totalSeconds}/>
+                <Clock totalSeconds={totalSeconds}/>
                 <CountdownForm onSetSeconds={this.setSeconds}/>
             </div>
 
