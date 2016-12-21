@@ -26749,6 +26749,7 @@
 	        };
 
 	        _this.setSeconds = _this.setSeconds.bind(_this);
+	        _this.handleStatusChange = _this.handleStatusChange.bind(_this);
 	        return _this;
 	    }
 
@@ -26770,6 +26771,10 @@
 	                _this2.setState({
 	                    totalSeconds: newSeconds >= 0 ? newSeconds : 0
 	                });
+
+	                if (newSeconds === 0) {
+	                    _this2.setState({ countdownStatus: "stopped" });
+	                }
 	            }, 1000);
 	        }
 	    }, {
@@ -26780,22 +26785,51 @@
 	                    case "started":
 	                        this.startTimer();
 	                        break;
+	                    case "stopped":
+	                        this.setState({ totalSeconds: 0 });
+	                    case "paused":
+	                        clearInterval(this.timerID);
+	                        this.timerID = undefined;
+	                        break;
 	                }
 	            }
 	        }
 	    }, {
+	        key: "handleStatusChange",
+	        value: function handleStatusChange(newStatus) {
+	            this.setState({
+	                countdownStatus: newStatus
+	            });
+	        }
+	    }, {
+	        key: "componentWillUnmount",
+	        value: function componentWillUnmount() {
+	            clearInterval(this.timerID);
+	            this.timerID = undefined;
+	        }
+	    }, {
 	        key: "render",
 	        value: function render() {
+	            var _this3 = this;
+
 	            var _state = this.state,
 	                totalSeconds = _state.totalSeconds,
 	                countdownStatus = _state.countdownStatus;
+
+
+	            var renderControlArea = function renderControlArea() {
+	                if (countdownStatus !== "stopped") {
+	                    return _react2.default.createElement(_Controls2.default, { countdownStatus: countdownStatus, onStatusChange: _this3.handleStatusChange });
+	                } else {
+	                    return _react2.default.createElement(_CountdownForm2.default, { onSetSeconds: _this3.setSeconds });
+	                }
+	            };
 
 	            return _react2.default.createElement(
 	                "div",
 	                null,
 	                _react2.default.createElement(_Clock2.default, { totalSeconds: totalSeconds }),
-	                _react2.default.createElement(_CountdownForm2.default, { onSetSeconds: this.setSeconds }),
-	                _react2.default.createElement(_Controls2.default, { countdownStatus: countdownStatus })
+	                renderControlArea()
 	            );
 	        }
 	    }]);
@@ -26908,12 +26942,26 @@
 	    function Controls(props) {
 	        _classCallCheck(this, Controls);
 
-	        return _possibleConstructorReturn(this, (Controls.__proto__ || Object.getPrototypeOf(Controls)).call(this, props));
+	        var _this = _possibleConstructorReturn(this, (Controls.__proto__ || Object.getPrototypeOf(Controls)).call(this, props));
+
+	        _this.onStatusChange = _this.onStatusChange.bind(_this);
+	        return _this;
 	    }
 
 	    _createClass(Controls, [{
+	        key: "onStatusChange",
+	        value: function onStatusChange(newStatus) {
+	            var _this2 = this;
+
+	            return function () {
+	                _this2.props.onStatusChange(newStatus);
+	            };
+	        }
+	    }, {
 	        key: "render",
 	        value: function render() {
+	            var _this3 = this;
+
 	            var countdownStatus = this.props.countdownStatus;
 
 
@@ -26921,13 +26969,13 @@
 	                if (countdownStatus === "started") {
 	                    return _react2.default.createElement(
 	                        "button",
-	                        { className: "button secondary pause" },
+	                        { className: "button secondary pause", onClick: _this3.onStatusChange('paused') },
 	                        "Pause"
 	                    );
 	                } else if (countdownStatus === "paused") {
 	                    return _react2.default.createElement(
 	                        "button",
-	                        { className: "button primary start" },
+	                        { className: "button primary start", onClick: _this3.onStatusChange('started') },
 	                        "Start"
 	                    );
 	                }
@@ -26939,7 +26987,7 @@
 	                renderStartStopButton(),
 	                _react2.default.createElement(
 	                    "button",
-	                    { className: "button alert hollow clear" },
+	                    { className: "button alert hollow clear", onClick: this.onStatusChange('stopped') },
 	                    "Clear"
 	                )
 	            );
@@ -26953,7 +27001,8 @@
 
 
 	Controls.propTypes = {
-	    countdownStatus: _react2.default.PropTypes.string.isRequired
+	    countdownStatus: _react2.default.PropTypes.string.isRequired,
+	    onStatusChange: _react2.default.PropTypes.func.isRequired
 	};
 
 /***/ },
@@ -27339,7 +27388,7 @@
 
 
 	// module
-	exports.push([module.id, ".top-bar, .top-bar ul {\n  background-color: #333333; }\n\n.top-bar .menu-text {\n  color: #ffffff; }\n\n.top-bar .menu > .menu-text > a {\n  display: inline; }\n\n.top-bar .active-link {\n  font-weight: bold; }\n\n.clock {\n  align-items: center;\n  background-color: #B5D0E2;\n  border: 2px solid #2099E8;\n  border-radius: 50%;\n  display: flex;\n  height: 14rem;\n  justify-content: center;\n  margin: 4rem auto;\n  width: 14rem; }\n\n.clock-text {\n  color: white;\n  font-size: 2.25rem;\n  font-weight: 300; }\n", ""]);
+	exports.push([module.id, ".top-bar, .top-bar ul {\n  background-color: #333333; }\n\n.top-bar .menu-text {\n  color: #ffffff; }\n\n.top-bar .menu > .menu-text > a {\n  display: inline; }\n\n.top-bar .active-link {\n  font-weight: bold; }\n\n.clock {\n  align-items: center;\n  background-color: #B5D0E2;\n  border: 2px solid #2099E8;\n  border-radius: 50%;\n  display: flex;\n  height: 14rem;\n  justify-content: center;\n  margin: 4rem auto;\n  width: 14rem; }\n\n.clock-text {\n  color: white;\n  font-size: 2.25rem;\n  font-weight: 300; }\n\n.controls {\n  display: flex;\n  justify-content: center; }\n  .controls .button {\n    padding: .75rem 3rem; }\n  .controls .button:first-child {\n    margin-right: 1.5rem; }\n", ""]);
 
 	// exports
 

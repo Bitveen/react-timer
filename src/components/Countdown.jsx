@@ -12,6 +12,7 @@ export default class Countdown extends React.Component {
         };
 
         this.setSeconds = this.setSeconds.bind(this);
+        this.handleStatusChange = this.handleStatusChange.bind(this);
     }
 
     setSeconds(seconds) {
@@ -26,7 +27,15 @@ export default class Countdown extends React.Component {
             this.setState({
                 totalSeconds: newSeconds >= 0 ? newSeconds : 0
             });
+
+            if (newSeconds === 0) {
+                this.setState({ countdownStatus: "stopped" });
+            }
+
         }, 1000);
+
+
+
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -35,17 +44,45 @@ export default class Countdown extends React.Component {
                 case "started":
                     this.startTimer();
                     break;
+                case "stopped":
+                    this.setState({totalSeconds: 0});
+                case "paused":
+                    clearInterval(this.timerID);
+                    this.timerID = undefined;
+                    break;
             }
         }
     }
 
+    handleStatusChange(newStatus) {
+        this.setState({
+            countdownStatus: newStatus
+        });
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timerID);
+        this.timerID = undefined;
+    }
+
+
     render() {
         let {totalSeconds, countdownStatus} = this.state;
+
+
+        let renderControlArea = () => {
+            if (countdownStatus !== "stopped") {
+                return <Controls countdownStatus={countdownStatus} onStatusChange={this.handleStatusChange}/>;
+            } else {
+                return <CountdownForm onSetSeconds={this.setSeconds} />;
+            }
+        };
+
+
         return (
             <div>
                 <Clock totalSeconds={totalSeconds}/>
-                <CountdownForm onSetSeconds={this.setSeconds}/>
-                <Controls countdownStatus={countdownStatus} />
+                {renderControlArea()}
             </div>
 
         );

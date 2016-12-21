@@ -5,16 +5,24 @@ import React from "react";
 export default class Controls extends React.Component {
     constructor(props) {
         super(props);
+        this.onStatusChange = this.onStatusChange.bind(this);
     }
+
+    onStatusChange(newStatus) {
+        return () => {
+            this.props.onStatusChange(newStatus);
+        }
+    }
+    
 
     render() {
         let { countdownStatus } = this.props;
 
         let renderStartStopButton = () => {
             if (countdownStatus === "started") {
-                return <button className="button secondary pause">Pause</button>
+                return <button className="button secondary pause" onClick={this.onStatusChange('paused')}>Pause</button>
             } else if (countdownStatus === "paused") {
-                return <button className="button primary start">Start</button>
+                return <button className="button primary start" onClick={this.onStatusChange('started')}>Start</button>
             }
         };
 
@@ -22,7 +30,7 @@ export default class Controls extends React.Component {
         return (
             <div className="controls">
                 {renderStartStopButton()}
-                <button className="button alert hollow clear">Clear</button>
+                <button className="button alert hollow clear" onClick={this.onStatusChange('stopped')}>Clear</button>
             </div>
         );
     }
@@ -31,5 +39,6 @@ export default class Controls extends React.Component {
 
 
 Controls.propTypes = {
-    countdownStatus: React.PropTypes.string.isRequired
+    countdownStatus: React.PropTypes.string.isRequired,
+    onStatusChange: React.PropTypes.func.isRequired
 };
