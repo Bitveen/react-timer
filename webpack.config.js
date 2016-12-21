@@ -9,7 +9,8 @@ module.exports = {
         alias: {
             Clock: "components/Clock.jsx",
             CountdownForm: "components/CountdownForm.jsx",
-            Countdown: "components/Countdown.jsx"
+            Countdown: "components/Countdown.jsx",
+            Controls: "components/Controls.jsx"
         },
         extensions: ["", ".js", ".jsx"]
     },

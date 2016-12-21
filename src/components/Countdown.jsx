@@ -1,7 +1,7 @@
 import React from "react";
 import Clock from "Clock";
 import CountdownForm from "CountdownForm";
-
+import Controls from "Controls";
 
 export default class Countdown extends React.Component {
     constructor(props) {
@@ -40,11 +40,12 @@ export default class Countdown extends React.Component {
     }
 
     render() {
-        let {totalSeconds} = this.state;
+        let {totalSeconds, countdownStatus} = this.state;
         return (
             <div>
                 <Clock totalSeconds={totalSeconds}/>
                 <CountdownForm onSetSeconds={this.setSeconds}/>
+                <Controls countdownStatus={countdownStatus} />
             </div>
 
         );
