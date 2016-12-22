@@ -2,8 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {Router, Route, IndexRoute, hashHistory} from "react-router";
 import Main from "./components/Main";
-import Timer from "./components/Timer";
-import Countdown from "./components/Countdown";
+import Timer from "Timer";
+import Countdown from "Countdown";
 
 
 

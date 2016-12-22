@@ -25,13 +25,21 @@ describe("Countdown", () => {
                 expect(countdown.state.totalSeconds).toBe(0);
                 done();
             }, 3003);
+        });
 
-
-
-
-
+        it("should pause countdown on paused state", (done) => {
+            let countdown = TestUtils.renderIntoDocument(<Countdown />);
+            countdown.setSeconds(3);
+            countdown.handleStatusChange("paused");
+            setTimeout(() => {
+                expect(countdown.state.totalSeconds).toBe(3);
+                expect(countdown.state.countdownStatus).toBe("paused");
+                done();
+            }, 1001);
 
         });
+
+
     });
 
 });

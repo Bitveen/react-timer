@@ -13,7 +13,7 @@ export default class Controls extends React.Component {
             this.props.onStatusChange(newStatus);
         }
     }
-    
+
 
     render() {
         let { countdownStatus } = this.props;
@@ -21,7 +21,7 @@ export default class Controls extends React.Component {
         let renderStartStopButton = () => {
             if (countdownStatus === "started") {
                 return <button className="button secondary pause" onClick={this.onStatusChange('paused')}>Pause</button>
-            } else if (countdownStatus === "paused") {
+            } else {
                 return <button className="button primary start" onClick={this.onStatusChange('started')}>Start</button>
             }
         };
